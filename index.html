@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-HK">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>金剛經互動學習：第一站 發心</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* layout: one phone-width column; home = path map, lesson = one idea per screen (try first, then explain) */
+  --bg:#eef1f4;
+  --surface:#ffffff;
+  --ink:#1f2a36;
+  --muted:#5d6b7a;
+  --line:#d5dce3;
+  --saffron:#b8700f;      /* 袈裟色, the accent */
+  --saffron-soft:#f6e9d4;
+  --vajra:#2f5d7c;        /* 金剛 steel blue, for sutra text */
+  --vajra-soft:#e3edf3;
+  --good:#2e7d4f; --good-soft:#e1f2e7;
+  --bad:#a63d32;  --bad-soft:#f7e3e0;
+  --display:"Noto Serif TC","Songti TC","PMingLiU",serif;
+  --body:"Noto Sans TC","PingFang HK","Microsoft JhengHei",sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#141a21; --surface:#1d252e; --ink:#e6ebf0; --muted:#9fadbb; --line:#324050;
+    --saffron:#e7a14a; --saffron-soft:#3a2c18; --vajra:#8fc0e0; --vajra-soft:#1f3442;
+    --good:#6fcf97; --good-soft:#1c3527; --bad:#f08b7e; --bad-soft:#3d2320; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#141a21; --surface:#1d252e; --ink:#e6ebf0; --muted:#9fadbb; --line:#324050;
+  --saffron:#e7a14a; --saffron-soft:#3a2c18; --vajra:#8fc0e0; --vajra-soft:#1f3442;
+  --good:#6fcf97; --good-soft:#1c3527; --bad:#f08b7e; --bad-soft:#3d2320; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.75}
+.wrap{max-width:640px;margin:0 auto;padding:20px 16px 64px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.35}
+h1{font-size:1.65rem}
+h2{font-size:1.3rem}
+h3{font-size:1.05rem}
+p{margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible{outline:3px solid var(--saffron);outline-offset:2px}
+.top{display:flex;flex-direction:column;gap:6px;margin-bottom:18px}
+.eyebrow{font-size:.8rem;letter-spacing:.08em;color:var(--saffron);font-weight:700}
+.sub{color:var(--muted);font-size:.95rem}
+.tabs{display:flex;gap:8px;margin:14px 0 20px;flex-wrap:wrap}
+.tab{border:1px solid var(--line);background:var(--surface);padding:6px 14px;border-radius:999px;font-size:.92rem}
+.tab[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.stack{display:flex;flex-direction:column;gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px}
+
+/* path map */
+.stage{display:flex;flex-direction:column;gap:10px}
+.stagehead{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.stagehead .meta{font-size:.85rem;color:var(--muted)}
+.bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--saffron);width:0;transition:width .4s}
+.path{display:flex;flex-direction:column;gap:0;margin-top:6px}
+.step{display:grid;grid-template-columns:40px 1fr auto;gap:12px;align-items:center;padding:12px 4px;border-bottom:1px solid var(--line);background:none;border-left:0;border-right:0;border-top:0;text-align:left;width:100%}
+.step:last-child{border-bottom:0}
+.dot{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:.85rem;border:2px solid var(--saffron);color:var(--saffron);background:var(--surface)}
+.step.done .dot{background:var(--saffron);color:var(--surface)}
+.step .t{display:flex;flex-direction:column}
+.step .t b{font-weight:700}
+.step .t span{font-size:.88rem;color:var(--muted)}
+.step .go{font-size:.85rem;color:var(--saffron);font-weight:700}
+.locked{opacity:.55}
+.locked .dot{border-style:dashed;border-color:var(--muted);color:var(--muted)}
+.five{display:flex;gap:6px;flex-wrap:wrap}
+.five span{font-size:.82rem;padding:3px 10px;border-radius:99px;border:1px solid var(--line);color:var(--muted)}
+.five span.on{background:var(--saffron-soft);border-color:var(--saffron);color:var(--saffron);font-weight:700}
+
+/* lesson */
+.lessonnav{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+.back{background:none;border:0;color:var(--muted);padding:4px 0;font-size:.92rem}
+.pill{font-size:.8rem;padding:2px 10px;border-radius:99px;background:var(--saffron-soft);color:var(--saffron);font-weight:700}
+.scene{background:var(--saffron-soft);border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:8px}
+.scene .lab{font-size:.8rem;font-weight:700;color:var(--saffron)}
+.flag{font-size:.78rem;color:var(--muted)}
+.q{font-weight:700;font-size:1.05rem}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{text-align:left;padding:12px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);line-height:1.55}
+.opt:hover{border-color:var(--saffron)}
+.opt.right{border-color:var(--good);background:var(--good-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt[disabled]{cursor:default}
+.verdict{font-weight:700}
+.verdict.ok{color:var(--good)} .verdict.no{color:var(--bad)}
+.reveal{display:flex;flex-direction:column;gap:14px}
+.sutra{border-left:4px solid var(--vajra);background:var(--vajra-soft);padding:12px 14px;border-radius:0 10px 10px 0;font-family:var(--display);color:var(--ink)}
+.sutra small,.quote small{display:block;font-family:var(--body);font-size:.78rem;color:var(--muted);margin-top:6px}
+.quote{border-left:4px solid var(--saffron);padding:4px 0 4px 14px}
+.block{display:flex;flex-direction:column;gap:6px}
+.block .lab{font-size:.82rem;font-weight:700;color:var(--muted);letter-spacing:.04em}
+.try{background:var(--surface);border:1.5px dashed var(--saffron);border-radius:12px;padding:12px 14px}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.btn{border:0;background:var(--saffron);color:#fff;padding:10px 18px;border-radius:10px;font-weight:700}
+.btn.ghost{background:none;border:1.5px solid var(--line);color:var(--ink)}
+.term{white-space:nowrap}
+
+/* flashcards */
+.flip{min-height:200px;display:flex;flex-direction:column;justify-content:center;gap:10px;text-align:center;border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:22px;width:100%}
+.flip .front{font-family:var(--display);font-size:1.5rem}
+.flip .en{color:var(--muted);font-size:.9rem}
+.flip .back{font-size:1rem;text-align:left}
+.counter{font-size:.85rem;color:var(--muted);text-align:center}
+.foot{margin-top:28px;font-size:.82rem;color:var(--muted);display:flex;flex-direction:column;gap:6px}
+@media (prefers-reduced-motion:reduce){.bar>i{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <span class="eyebrow">金剛般若波羅蜜經 · 試行版</span>
+    <h1>第一站：發心</h1>
+    <p class="sub">由經題讀到第五分。每課先俾你諗一條生活題，揀咗答案先睇經文同法師點講。</p>
+  </header>
+  <nav class="tabs" aria-label="切換">
+    <button class="tab" id="tab-path" aria-pressed="true">學習路線</button>
+    <button class="tab" id="tab-cards" aria-pressed="false">記憶卡</button>
+    <button class="tab" id="tab-quiz" aria-pressed="false">溫習小測</button>
+  </nav>
+  <main id="app"></main>
+  <footer class="foot">
+    <span>經文：鳩摩羅什譯，據衍空法師《金剛般若波羅蜜經》科判（乙巳年冬初稿）。法師解說：宣化上人《金剛般若波羅蜜經淺釋》（1968–69 三藩市講述）。頁數係 PDF 頁，兩份都同印刷頁一致。</span>
+    <span>「阿行」嘅情境同埋標住「比喻」嘅內容係為咗教學作出嚟，唔係出自經文或者法師。</span>
+  </footer>
+</div>
+
+<script>
+const LESSONS = [
+{
+  id:"L0", fen:"經題", title:"金剛、般若、波羅蜜", short:"經名講緊咩",
+  scene:"朋友送咗本《金剛經》俾阿行。佢望住個名笑：「金剛？係咪變形金剛呀？」",
+  q:"你估「金剛」喺經題入面代表咩？",
+  opts:[
+    {t:"一種最硬嘅寶石／金屬，比喻堅固、光明、鋒利嘅智慧", ok:true},
+    {t:"守廟門嘅金剛力士，代表護法神"},
+    {t:"冇特別意思，只係令經名聽落威啲"}
+  ],
+  why:"金剛係比喻，指智慧好似鑽石咁：自己唔會壞，又切得開所有嘢。",
+  sutra:null,
+  quotes:[
+    {q:"金剛具足三個意思。三個意思是甚麼呢？第一個就是堅固；第二個就是光明；第三個是銳利", src:"宣化《淺釋》p.12"}
+  ],
+  plain:"成個經名拆開：<b>金剛</b>係比喻；<b>般若</b>（prajñā）即係智慧；<b>波羅蜜</b>（pāramitā）宣化上人譯做「到彼岸」（p.16）。合埋就係：一種好似金剛咁、切得斷煩惱、帶你由呢邊岸過到嗰邊岸嘅智慧。",
+  analogy:"<b>比喻：</b>佢好似一把鎅刀，唔係一本字典。字典要你背；鎅刀係攞嚟用，鎅開你心入面黐得最實嗰樣嘢。",
+  practice:"今日諗一樣你「黐得好實」嘅嘢，可以係一個人、一個目標，或者一個「我一定要……」，寫低佢。之後五課我哋會返嚟睇佢。"
+},
+{
+  id:"L1", fen:"第一分", title:"法會因由", short:"佛陀食飯、洗腳、坐低",
+  scene:"阿行心諗：「講智慧嘅經，第一段一定好玄，可能講宇宙點樣開始。」佢揭開第一頁……",
+  q:"《金剛經》正文第一段，佛陀做緊咩？",
+  opts:[
+    {t:"喺天上放光，宣講宇宙真理"},
+    {t:"著衣、托缽、入城乞食，食完飯收好衣缽、洗腳，然後坐低", ok:true},
+    {t:"同外道辯論，贏咗一場大辯論"}
+  ],
+  why:"成部講最高智慧嘅經，第一幕就係一個人平平靜靜食飯、執嘢、洗腳、坐低。",
+  sutra:{t:"爾時，世尊食時，著衣持缽，入舍衛大城乞食。於其城中，次第乞已，還至本處。飯食訖，收衣缽，洗足已，敷座而坐。", src:"衍空科判 p.1（I. 序分）"},
+  quotes:[
+    {q:"你要明白法的，一切舉動行為都是修行。", src:"宣化《淺釋》p.35"},
+    {q:"「勿越貧而從富，勿越賤而從貴。」", src:"宣化《淺釋》p.34，解「次第乞已」"}
+  ],
+  plain:"修行唔係另一個世界嘅事，就喺食飯、執枱、搭港鐵嗰度。「次第乞已」即係一家一家順住去，唔會專揀有錢人或者專揀窮人。對每個人都一視同仁，本身已經係智慧。",
+  analogy:"<b>比喻：</b>好似學游水，好嘅教練第一日唔會同你講流體力學，佢會叫你落水先。佛陀第一課，就係示範點樣好好地食一餐飯。",
+  practice:"今日食一餐飯唔睇手機，淨係知道自己喺度食：知道夾起、知道咀嚼、知道食完。"
+},
+{
+  id:"L2", fen:"第二分", title:"善現啟請", short:"兩條問題：心放喺邊？心亂點算？",
+  scene:"阿行個 project 出咗事，老闆當眾鬧佢。返到屋企，佢個腦不停重播嗰幾句說話，成晚瞓唔著。",
+  q:"須菩提代所有人問咗佛陀兩條問題，成部經都係答呢兩條。你估係邊兩條？",
+  opts:[
+    {t:"點樣發達？點樣長壽？"},
+    {t:"個心應該安住喺邊？個心亂嗰陣點樣收服佢？", ok:true},
+    {t:"點樣最快成佛？點樣唔使輪迴？"}
+  ],
+  why:"「應云何住？云何降伏其心？」就係問：心應該放喺邊，同埋心亂咗點樣收返。阿行今晚撞正嘅就係呢兩條問題。",
+  sutra:{t:"世尊！善男子、善女人，發阿耨多羅三藐三菩提心，應云何住? 云何降伏其心?", src:"衍空科判 p.1（發心菩提 a.）"},
+  quotes:[
+    {q:"那麼一樣的錢，看你怎麼樣的用法。", src:"宣化《淺釋》p.41，講貪瞋癡同戒定慧其實係同一份力量"},
+    {q:"這個《金剛般若波羅蜜經》，這個要緊的地方就在這「如是」兩個字", src:"宣化《淺釋》p.42"}
+  ],
+  plain:"佛陀第一個答案只係：「應如是住，如是降伏其心」，即係「就係咁樣」。宣化上人話，呢個「如是」用講係講唔出嘅，要坐低練習先明（p.42）。佢亦講：同一股力量，用錯咗就係貪、瞋、癡，用啱咗就係戒、定、慧。",
+  analogy:"<b>比喻：</b>一杯攪混咗嘅泥水，你越想用手撥清佢，佢就越濁。放低唔郁，泥自然會沉落底。",
+  practice:"今晚瞓前坐低 5 分鐘，淨係留意呼吸。個腦又開始重播嗰陣，知道「佢又播緊」，然後返嚟呼吸，唔使鬧自己。"
+},
+{
+  id:"L3", fen:"第三分", title:"大乘正宗", short:"度咗好多人，但冇「我度咗人」",
+  scene:"阿行逢星期六去教基層小朋友做功課。做咗半年，佢心入面開始有把聲：「我幫咗咁多人，我都算幾好人喎。」",
+  q:"佛陀話，菩薩度咗無量咁多眾生之後，應該點樣睇？",
+  opts:[
+    {t:"記住自己度過幾多人，用嚟鼓勵自己繼續"},
+    {t:"「實無眾生得滅度者」：心入面冇「我」度咗「佢」嘅想法", ok:true},
+    {t:"唔使理人，自己修好先算"}
+  ],
+  why:"度人照做，而且要度晒所有眾生；但心入面唔留低「我係救人嗰個」嘅記號。",
+  sutra:{t:"如是滅度無量無數無邊眾生，實無眾生得滅度者。何以故? 須菩提！若菩薩有我相、人相、眾生相、壽者相，即非菩薩。", src:"衍空科判 p.1"},
+  quotes:[
+    {q:"實實在在的沒有一個眾生，是我度的。這是，眾生的自性自度，並不是我把他們度的。", src:"宣化《淺釋》p.51"},
+    {q:"那麼你盡想給人看樣子，這也變成了一個家俬了，變成了人家家裏的一種擺設了。", src:"宣化《淺釋》p.49"}
+  ],
+  plain:"<b>四相</b>就係四種「黐住」：<span class='term'>我相</span>（覺得「我」好重要）、<span class='term'>人相</span>（覺得「佢」同我分開）、<span class='term'>眾生相</span>、<span class='term'>壽者相</span>（黐住生命同時間）。呢個係一般嘅入門解法，唔係宣化上人原文。黐住呢啲相去做好事，好事就變成擺俾人睇嘅家俬。",
+  analogy:"<b>比喻：</b>一個好嘅補習老師，學生合格係學生自己溫出嚟。佢唔會周圍同人講「佢係我教出嚟㗎」。",
+  practice:"今日幫完人之後，留意吓心入面有冇把聲講「我幫咗你喎」。聽到就笑一笑，知道佢係咁，放低。"
+},
+{
+  id:"L4", fen:"第四分", title:"妙行無住", short:"做咗好事，好似冇做過咁",
+  scene:"阿行通宵幫同事改好份 report。第二朝老闆喺會議讚嘅係同事，冇人提過阿行一句。",
+  q:"佛陀話，點樣布施（俾出去）福德先最大？",
+  opts:[
+    {t:"俾得越多越好，數目越大功德越大"},
+    {t:"做完要俾人知，等更多人學"},
+    {t:"「不住於相」：做完唔黐住「我做咗」", ok:true}
+  ],
+  why:"重點唔係俾幾多，而係俾完個心有冇黐住。",
+  sutra:{t:"須菩提！菩薩應如是布施，不住於相。何以故? 若菩薩不住相布施，其福德不可思量。", src:"衍空科判 p.2"},
+  quotes:[
+    {q:"要布施而不存著布施之相。做了就像沒做一樣。", src:"宣化《淺釋》p.52"},
+    {q:"你就捐一百萬塊錢，你心裏總記著有這一百萬存在，那祗是一百萬而已，不能增加。", src:"宣化《淺釋》p.53"},
+    {q:"你做好的事，不應該記得；做不好的事，應該記得。", src:"宣化《淺釋》p.54"}
+  ],
+  plain:"宣化上人叫呢個做<b>三輪體空</b>（p.52）：唔黐住「我係俾嘅人」、「佢係收嘅人」，亦唔黐住「我俾咗啲咩」。佛陀仲用虛空做比喻：東南西北上下嘅虛空度唔到幾大，唔黐相嘅布施，福德都係咁無限。",
+  analogy:"<b>比喻：</b>好似你喺街上幫人執起跌咗嘅八達通，遞返俾佢就行開。你唔會等佢寫封感謝信。阿行份 report 都係咁：份 report 好咗，件事已經完成。",
+  practice:"今日做一件細細嘅好事，唔同任何人講，連 IG 都唔出。"
+},
+{
+  id:"L5", fen:"第五分", title:"如理實見", short:"凡所有相，皆是虛妄",
+  scene:"夜晚阿行碌 IG：舊同學去旅行、升職、結婚，個個都好似好幸福。佢越睇越覺得自己好失敗。",
+  q:"須菩提可唔可以靠佛陀莊嚴嘅外表（身相），認出真正嘅如來？",
+  opts:[
+    {t:"可以，佛陀嘅外表係最莊嚴嘅"},
+    {t:"唔可以：「凡所有相，皆是虛妄」", ok:true},
+    {t:"要聽佢講嘢先知"}
+  ],
+  why:"連佛陀嘅外表都唔可以當係佛陀本身，何況 IG 上面嘅相。",
+  sutra:{t:"凡所有相，皆是虛妄。若見諸相非相，即見如來。", src:"衍空科判 p.2"},
+  quotes:[
+    {q:"這有相都是假的，都會壞的，有形相終歸毀滅的。", src:"宣化《淺釋》p.58"}
+  ],
+  plain:"「虛妄」唔等於「唔存在」。意思係：佢唔似你以為咁實淨、咁永恆，亦唔係全部。（呢句係我嘅白話解釋。）見到一個相，心裏知道「呢個只係相」，就係「見諸相非相」嘅第一步。",
+  analogy:"<b>比喻：</b>IG 相好似商場櫥窗，燈光、角度、filter 全部揀過。你見到嘅係櫥窗，唔係成間舖，更加唔係人哋成個人生。",
+  practice:"今日見到令你羨慕或者自卑嘅「相」，心入面講一句：「呢個係相，唔係全部。」再望返第 0 課寫低嗰樣「黐得好實」嘅嘢，佢係咪都係一個相？"
+}
+];
+
+const CARDS = [
+  {f:"般若", en:"prajñā · wisdom", b:"智慧。唔係讀書叻嗰種聰明，係睇得穿、放得低嘅智慧。"},
+  {f:"波羅蜜", en:"pāramitā · perfection / crossing over", b:"宣化上人譯做「到彼岸」：由生死煩惱呢邊岸，過到涅槃嗰邊岸（《淺釋》p.16）。"},
+  {f:"金剛", en:"vajra · diamond / thunderbolt", b:"比喻智慧：堅固、光明、銳利（《淺釋》p.12）。"},
+  {f:"應云何住？云何降伏其心？", en:"How should the mind abide? How should it be subdued?", b:"須菩提嘅兩條問題，成部經都係答佢（科判 p.1）。"},
+  {f:"如是", en:"thus · just so", b:"佛陀答「應如是住，如是降伏其心」。宣化上人話全經要緊處就喺呢兩個字（《淺釋》p.42）。"},
+  {f:"阿耨多羅三藐三菩提", en:"anuttarā samyak-saṃbodhi", b:"無上正等正覺，即係佛嘅覺悟。阿耨＝無上，三藐＝正等，三菩提＝正覺（《淺釋》p.40）。"},
+  {f:"四相", en:"four notions: self, person, being, life-span", b:"我相、人相、眾生相、壽者相。有呢四相，「即非菩薩」（科判 p.1）。"},
+  {f:"無住", en:"non-abiding · non-attachment", b:"「不要執著；沒有執著就是解脫；解脫就是自由；自由就是無所拘束。」（《淺釋》p.52）"},
+  {f:"三輪體空", en:"emptiness of the three spheres of giving", b:"唔黐住施者、受者、施物（《淺釋》p.52）。"},
+  {f:"布施", en:"dāna · giving", b:"俾出去：錢、時間、力氣、知識、安慰都算。重點係「不住於相」（科判 p.2）。"},
+  {f:"凡所有相，皆是虛妄", en:"All forms are illusory", b:"「若見諸相非相，即見如來。」（科判 p.2）"},
+  {f:"六種成就", en:"six accomplishments of a sutra opening", b:"信、聞、時、主、處、眾，即「如是／我聞／一時／佛／舍衛國祇樹給孤獨園／大比丘眾」（《淺釋》p.23）。"}
+];
+
+const QUIZ = [
+  {q:"阿行同事搶咗功勞。用第四分嘅講法，阿行最好點樣睇？", o:["即刻同老闆講清楚，否則功德會冇咗","件事做好咗已經完成；唔黐住「我做咗」，亦唔使記恨","以後唔再幫人"], a:1, e:"「菩薩應如是布施，不住於相。」（科判 p.2）。點樣處理工作上嘅分工可以另外諗，但心入面唔使黐住。"},
+  {q:"「實無眾生得滅度者」意思最接近：", o:["其實唔使度人","度人照做，但心入面冇「我度咗佢」","眾生全部已經成佛"], a:1, e:"宣化：「實實在在的沒有一個眾生，是我度的。」（《淺釋》p.51）"},
+  {q:"點解《金剛經》第一段係佛陀食飯、洗腳、坐低？", o:["因為記錄嘅人寫漏咗重點","修行就喺日常一舉一動入面","因為嗰日冇人聽經"], a:1, e:"宣化：「你要明白法的，一切舉動行為都是修行。」（《淺釋》p.35）"},
+  {q:"「凡所有相，皆是虛妄」嘅「虛妄」最好理解為：", o:["所有嘢都唔存在","所有嘢都唔似我哋以為咁實淨、咁永恆","所有嘢都係壞嘅"], a:1, e:"宣化：「有形相終歸毀滅的。」（《淺釋》p.58）"}
+];
+
+const KEY="diamond-pilot-v1";
+let state={done:{}};
+try{const s=localStorage.getItem(KEY); if(s) state=JSON.parse(s);}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
+
+const app=document.getElementById("app");
+const tabs={path:document.getElementById("tab-path"),cards:document.getElementById("tab-cards"),quiz:document.getElementById("tab-quiz")};
+function setTab(k){for(const t in tabs) tabs[t].setAttribute("aria-pressed",t===k?"true":"false");}
+tabs.path.onclick=()=>{setTab("path");renderPath();};
+tabs.cards.onclick=()=>{setTab("cards");renderCards(0,false);};
+tabs.quiz.onclick=()=>{setTab("quiz");renderQuiz(0,0);};
+function esc(s){return s.replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));}
+
+function renderPath(){
+  const n=LESSONS.filter(l=>state.done[l.id]).length;
+  const pct=Math.round(n/LESSONS.length*100);
+  app.innerHTML=`
+  <div class="stack">
+    <section class="card stage">
+      <div class="stagehead"><h2>五菩提路線圖</h2><span class="meta">${n} / ${LESSONS.length} 課</span></div>
+      <p class="sub">衍空法師將經文分成五個階段。今次試行版行第一站。</p>
+      <div class="five">
+        <span class="on">① 發心</span><span>② 伏心</span><span>③ 明心</span><span>④ 出到</span><span>⑤ 無上</span>
+      </div>
+      <div class="bar" aria-hidden="true"><i style="width:${pct}%"></i></div>
+      <div class="path">
+        ${LESSONS.map((l,i)=>`
+          <button class="step ${state.done[l.id]?"done":""}" data-i="${i}">
+            <span class="dot">${state.done[l.id]?"✓":i}</span>
+            <span class="t"><b>${l.fen}・${l.title}</b><span>${l.short}</span></span>
+            <span class="go">${state.done[l.id]?"重溫":"開始"}</span>
+          </button>`).join("")}
+      </div>
+    </section>
+    <section class="card stage locked">
+      <div class="stagehead"><h2>② 伏心</h2><span class="meta">第六至十三分</span></div>
+      <p class="sub">筏喻、「應無所住而生其心」。試行版未開放。</p>
+    </section>
+  </div>`;
+  app.querySelectorAll(".step").forEach(b=>b.onclick=()=>renderLesson(+b.dataset.i));
+}
+
+function renderLesson(i){
+  const l=LESSONS[i];
+  app.innerHTML=`
+  <div class="stack">
+    <div class="lessonnav"><button class="back" id="back">← 返路線圖</button><span class="pill">${l.fen}</span></div>
+    <h2>${l.title}</h2>
+    <div class="scene">
+      <span class="lab">阿行嘅一日</span>
+      <p>${l.scene}</p>
+      <span class="flag">（情境係作出嚟嘅）</span>
+    </div>
+    <p class="q">${l.q}</p>
+    <div class="opts">${l.opts.map((o,k)=>`<button class="opt" id="opt-${k}" data-k="${k}">${o.t}</button>`).join("")}</div>
+    <div id="out"></div>
+  </div>`;
+  document.getElementById("back").onclick=()=>{window.scrollTo(0,0);renderPath();};
+  app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+    const k=+b.dataset.k, ok=!!l.opts[k].ok;
+    app.querySelectorAll(".opt").forEach((x,j)=>{x.disabled=true; if(l.opts[j].ok) x.classList.add("right");});
+    if(!ok) b.classList.add("wrong");
+    state.done[l.id]=true; save();
+    const next=i+1<LESSONS.length;
+    document.getElementById("out").innerHTML=`
+    <div class="reveal">
+      <p class="verdict ${ok?"ok":"no"}">${ok?"啱喇。":"差少少。"}${l.why}</p>
+      ${l.sutra?`<div class="block"><span class="lab">經文</span><div class="sutra">${l.sutra.t}<small>${l.sutra.src}</small></div></div>`:""}
+      <div class="block"><span class="lab">宣化上人點講</span>
+        ${l.quotes.map(q=>`<div class="quote">「${q.q}」<small>${q.src}</small></div>`).join("")}
+      </div>
+      <div class="block"><span class="lab">大白話</span><p>${l.plain}</p></div>
+      <div class="block"><span class="lab">生活比喻</span><p>${l.analogy}</p></div>
+      <div class="try"><div class="block"><span class="lab">今日小練習</span><p>${l.practice}</p></div></div>
+      <div class="row">
+        ${next?`<button class="btn" id="next">下一課：${LESSONS[i+1].title}</button>`:`<button class="btn" id="toquiz">去溫習小測</button>`}
+        <button class="btn ghost" id="again">再揀一次</button>
+      </div>
+    </div>`;
+    if(next) document.getElementById("next").onclick=()=>{window.scrollTo(0,0);renderLesson(i+1);};
+    else document.getElementById("toquiz").onclick=()=>{window.scrollTo(0,0);setTab("quiz");renderQuiz(0,0);};
+    document.getElementById("again").onclick=()=>renderLesson(i);
+  });
+}
+
+function renderCards(i,showBack){
+  const c=CARDS[i];
+  app.innerHTML=`
+  <div class="stack">
+    <p class="sub">撳張卡睇背面。全部 ${CARDS.length} 張，每張一個關鍵詞，附英文。</p>
+    <button class="flip" id="flip" aria-live="polite">
+      ${showBack?`<span class="back">${c.b}</span>`:`<span class="front">${c.f}</span><span class="en">${c.en}</span>`}
+    </button>
+    <p class="counter">${i+1} / ${CARDS.length}</p>
+    <div class="row" style="justify-content:center">
+      <button class="btn ghost" id="prev">上一張</button>
+      <button class="btn" id="nextc">下一張</button>
+    </div>
+  </div>`;
+  document.getElementById("flip").onclick=()=>renderCards(i,!showBack);
+  document.getElementById("prev").onclick=()=>renderCards((i-1+CARDS.length)%CARDS.length,false);
+  document.getElementById("nextc").onclick=()=>renderCards((i+1)%CARDS.length,false);
+}
+
+function renderQuiz(i,score){
+  if(i>=QUIZ.length){
+    app.innerHTML=`<div class="card stack"><h2>答啱 ${score} / ${QUIZ.length}</h2>
+    <p>答錯唔緊要。《金剛經》唔係考試，係每日用嘅工具。試吓將今日其中一個小練習做足一個星期。</p>
+    <div class="row"><button class="btn" id="redo">再做一次</button><button class="btn ghost" id="home">返路線圖</button></div></div>`;
+    document.getElementById("redo").onclick=()=>renderQuiz(0,0);
+    document.getElementById("home").onclick=()=>{setTab("path");renderPath();};
+    return;
+  }
+  const z=QUIZ[i];
+  app.innerHTML=`<div class="stack">
+    <p class="counter">第 ${i+1} / ${QUIZ.length} 題</p>
+    <p class="q">${z.q}</p>
+    <div class="opts">${z.o.map((o,k)=>`<button class="opt" id="qz-${k}" data-k="${k}">${o}</button>`).join("")}</div>
+    <div id="qout"></div></div>`;
+  app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+    const k=+b.dataset.k, ok=k===z.a;
+    app.querySelectorAll(".opt").forEach((x,j)=>{x.disabled=true; if(j===z.a) x.classList.add("right");});
+    if(!ok) b.classList.add("wrong");
+    document.getElementById("qout").innerHTML=`<div class="reveal"><p class="verdict ${ok?"ok":"no"}">${ok?"啱喇。":"再諗吓。"}</p><p>${z.e}</p>
+    <div class="row"><button class="btn" id="qn">${i+1<QUIZ.length?"下一題":"睇結果"}</button></div></div>`;
+    document.getElementById("qn").onclick=()=>renderQuiz(i+1,score+(ok?1:0));
+  });
+}
+renderPath();
+</script>
+</body>
+</html>
